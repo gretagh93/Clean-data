@@ -1,6 +1,6 @@
 # Clean-data
-In this project, there is one script called run_analysis.R in the folder scripts. 
-Download all the project in your R program and execute l'script run_analysis.R.
+In this project, there is one script called run_analysis.R in the folder scripts. <br />
+Download all the project in your R program and execute l'script run_analysis.R <br />
 This script:
 1. Merges the training and the test sets to create one data set.
 2. Extracts only the measurements on the mean and standard deviation for each measurement. 
