@@ -1,28 +1,25 @@
+# CLEANNING DATA SET
 
-
-
-# Appropriately labels the data set with descriptive variable names. 
-# From the data set in step 4, creates a second, independent tidy data set 
-# with the average of each variable for each activity and each subject.
-
-# Read file tab separated values and "," used as decimals points.
-
+#Information about data
 # subject_test.txt" y "subject_train.txt" - registros con las ID de cada sujeto.
 # y_test.txt" y "y_train.txt" - actividad de cada registro codificada como números.
 # activity_labels.txt - Significado de los números de las actividades "y".
 # X_test.txt y X_train.txt - marco de datos en el que cada columna es una medida.
 # features.txt - nombres de las medidas de "x".
 
+# Read file tab separated values and "," used as decimals points.
 X_test <- read.table("./data/getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/test/X_test.txt")
 Y_test <- read.table("./data/getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/test/y_test.txt")
 subject_test <- read.table("./data/getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/test/subject_test.txt")
 X_train <- read.table("./data/getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/train/X_train.txt")
 Y_train <- read.table("./data/getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/train/y_train.txt")
 subject_train <- read.table("./data/getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/train/subject_train.txt")
+labels <- read.table(
+  "./data/getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/features.txt")
 
 # Change the names of the columns to understand the data
-names(Y_test)[names(Y_test) == "V1"] <- "Activiy"
-names(Y_train)[names(Y_train) == "V1"] <- "Activiy"
+names(Y_test)[names(Y_test) == "V1"] <- "Activity"
+names(Y_train)[names(Y_train) == "V1"] <- "Activity"
 names(subject_test)[names(subject_test) == "V1"] <- "ID"
 names(subject_train)[names(subject_train) == "V1"] <- "ID"
 
@@ -31,36 +28,57 @@ xys_test<-cbind(subject_test, Y_test, X_test)
 xys_train<-cbind(subject_train, Y_train, X_train)
 traintest<-rbind(xys_train, xys_test)
 
-# Extracts only the measurements on the mean and standard deviation 
-# for each measurement. 
-# In the document features.txt, we can see the meaning of each column. The columns 
-# std - Standard Desviation
-# 4, 5, 6, 44, 45, 46, 84, 85, 86    
-# 124, 125, 126, 164, 165, 166
-# 202, 215, 228, 241, 254, 269, 270, 271
-# 349, 348, 350, 427, 428, 429, 504, 517, 530, 543,
-# Mean
-# 1, 2, 3, 41, 42, 43, 81, 82, 83,  
-# 121, 122, 123, 161, 162, 163, 
-# 214, 227, 240, 253, 266, 267, 268,
-# 345, 346, 347, 424, 425, 426, 503, 516, 529, 542
-# We add two columns more.
+# Extracts only the measurements on the mean (mean()) and standard deviation 
+# (std()) for each measurement. 
 
-tt_mainsd <-
-  cbind(traintest[, 1:8], traintest[, 43:48], traintest[, 83:88], 
-      traintest[, 123:128], traintest[, 163:168], traintest[, 204], 
-      traintest[, 216:217], traintest[, 218], traintest[, 228:229], 
-      traintest[, 242:243], traintest[, 255:256], traintest[, 268:273], 
-      traintest[, 347:352], traintest[, 426:431], traintest[, 505:506], 
-      traintest[, 518:519], traintest[, 531:532], traintest[, 544:545])
+# Get the number of column of mesurement and mean
+mm<-labels[grepl("*mean\\(|*std\\(", labels$V2),]
+# Add two columns more (Activity and ID).
+getcol<-function(num){traintest[,num+2]}
+tt_mainsd<-sapply(mm$V1, getcol)
+tt_mainsd<-as.data.frame(tt_mainsd)
+id<-traintest$ID
+activity<-traintest$Activity
+tt_mainsd<-cbind(id, activity, tt_mainsd)
 
 # Uses descriptive activity names to name the activities in the data set
 # First of all, I create an array of the six activity labels
 activity_labels<-c("WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS", 
-                  "SITTING", "STANDING", "LAYING")
+          "SITTING", "STANDING", "LAYING")
 # Convert numbers to the name of the activities
-convert_activity<-function(num){num<-activity_labels[num]}
-tt_mainsd$Activiy<-lapply(tt_mainsd[,2], convert_activity)
+actLab<-function(num){num<-activity_labels[num]}
+tt_mainsd$activity<-lapply(tt_mainsd[,2], actLab)
+
+# Appropriately labels the data set with descriptive variable names. 
+# Create the descriptive labels with mm
+mm<-gsub("-", " ", mm$V2)
+mm<-sub("^f", "Frequency ", mm)
+mm<-sub("^t", "Time ", mm)
+# Change the names of the columns
+colnames(tt_mainsd)<-c("id", "activity", mm)
+
+# From the data set in step 4, creates a second, independent tidy data set 
+# with the average of each variable for each activity and each subject.
+tt_mainsd$activity<-unlist(tt_mainsd$activity)
+# Split tt_mainsd
+t<-split(tt_mainsd, tt_mainsd$id)
+mean_vector<-c()
+# Create the new data frame and get the average.
+df<-data.frame()
+for(id in c(1:30)){
+  mean_dataframe<-data.frame()
+  mean_dataframe<-data.frame(id=rep(id, times = 6))
+  for (column in c(3:68)){
+    mean_dataframe<-
+      cbind(mean_dataframe, 
+            c(mean_vector, tapply(t$"1"[[column]], t$"1"$activity, mean)))}
+  df<-rbind(df, mean_dataframe)
+}
+# Change labels of the new data frame.
+df<-data.frame(df$id, rownames(df), df[2:67])
+rownames(df)<-c(1:180)
+colnames(df)<-c("id", "activity", mm)
+
 
 
 
