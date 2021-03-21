@@ -1,12 +1,5 @@
 # CLEANNING DATA SET
 
-#Information about data
-# subject_test.txt" y "subject_train.txt" - registros con las ID de cada sujeto.
-# y_test.txt" y "y_train.txt" - actividad de cada registro codificada como números.
-# activity_labels.txt - Significado de los números de las actividades "y".
-# X_test.txt y X_train.txt - marco de datos en el que cada columna es una medida.
-# features.txt - nombres de las medidas de "x".
-
 # Read file tab separated values and "," used as decimals points.
 X_test <- read.table("./data/getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/test/X_test.txt")
 Y_test <- read.table("./data/getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/test/y_test.txt")
