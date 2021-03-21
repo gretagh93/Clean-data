@@ -1,6 +1,6 @@
 # Clean-data
 
-Download all the project in your R program and execute l'script run_analysis.R <br />
+Download all the project in your R program, set Clean-data as your working directory using setwd() function in RStudioand execute the script run_analysis.R <br />
 
 In the folder data/getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/, there is another README.md, which explains all the data of this project. <br />
 
