@@ -1,6 +1,10 @@
 # Clean-data
-In this project, there is one script called run_analysis.R in the folder scripts. <br />
+
 Download all the project in your R program and execute l'script run_analysis.R <br />
+
+In the folder data/getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/, there is another README.md, which explains all the data of this project. <br />
+
+In the folder scripts, there is one script called run_analysis.R in the folder scripts. <br />
 This script:
 1. Merges the training and the test sets to create one data set.
 2. Extracts only the measurements on the mean and standard deviation for each measurement. 
