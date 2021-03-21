@@ -72,7 +72,8 @@ df<-data.frame(df$id, rownames(df), df[2:67])
 rownames(df)<-c(1:180)
 colnames(df)<-c("id", "activity", mm)
 
-
+# Write the final result in a txt
+write.table(df, "./result.txt", row.names=FALSE)
 
 
 
