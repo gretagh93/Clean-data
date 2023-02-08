@@ -31,15 +31,12 @@ activity<-traintest$Activity
 tt_mainsd<-cbind(id, activity, tt_mainsd)
 
 # Uses descriptive activity names to name the activities in the dataset
-
-# Create an array of the six activity labels
 activity_labels<-c("WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS", 
           "SITTING", "STANDING", "LAYING")
-# Convert numbers to the name of the activities
 actLab<-function(num){num<-activity_labels[num]}
 tt_mainsd$activity<-lapply(tt_mainsd[,2], actLab)
 
-# Appropriately labels the data set with descriptive variable names. 
+# Appropriately labels the dataset with descriptive variable names. 
 # Create the descriptive labels with mm
 mm<-gsub("-", " ", mm$V2)
 mm<-sub("^f", "Frequency ", mm)
