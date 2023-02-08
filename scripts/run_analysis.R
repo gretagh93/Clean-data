@@ -22,7 +22,7 @@ traintest<-rbind(xys_train, xys_test)
 
 # Get the number of column of mesurement and mean
 mm<-labels[grepl("*mean\\(|*std\\(", labels$V2),]
-# Add two columns more (Activity and ID).
+# Add columns Activity and ID.
 getcol<-function(num){traintest[,num+2]}
 tt_mainsd<-sapply(mm$V1, getcol)
 tt_mainsd<-as.data.frame(tt_mainsd)
@@ -31,7 +31,8 @@ activity<-traintest$Activity
 tt_mainsd<-cbind(id, activity, tt_mainsd)
 
 # Uses descriptive activity names to name the activities in the dataset
-# First of all, I create an array of the six activity labels
+
+# Create an array of the six activity labels
 activity_labels<-c("WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS", 
           "SITTING", "STANDING", "LAYING")
 # Convert numbers to the name of the activities
@@ -43,15 +44,18 @@ tt_mainsd$activity<-lapply(tt_mainsd[,2], actLab)
 mm<-gsub("-", " ", mm$V2)
 mm<-sub("^f", "Frequency ", mm)
 mm<-sub("^t", "Time ", mm)
+
 # Change the names of the columns
 colnames(tt_mainsd)<-c("id", "activity", mm)
 
 # From the data set in step 4, creates a second, independent tidy data set 
 # with the average of each variable for each activity and each subject.
 tt_mainsd$activity<-unlist(tt_mainsd$activity)
+
 # Split tt_mainsd
 t<-split(tt_mainsd, tt_mainsd$id)
 mean_vector<-c()
+
 # Create the new data frame and get the average.
 df<-data.frame()
 for(id in c(1:30)){
@@ -61,14 +65,14 @@ for(id in c(1:30)){
     mean_dataframe<-
       cbind(mean_dataframe, 
             c(mean_vector, tapply(t$"1"[[column]], t$"1"$activity, mean)))}
-  df<-rbind(df, mean_dataframe)
-}
+  df<-rbind(df, mean_dataframe)}
+
 # Change labels of the new data frame.
 df<-data.frame(df$id, rownames(df), df[2:67])
 rownames(df)<-c(1:180)
 colnames(df)<-c("id", "activity", mm)
 
-# Write the final result in a txt
+# Write result in a .txt file
 write.table(df, "./result.txt", row.names=FALSE)
 
 
