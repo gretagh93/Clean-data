@@ -18,8 +18,7 @@ xys_test<-cbind(subject_test, Y_test, X_test)
 xys_train<-cbind(subject_train, Y_train, X_train)
 traintest<-rbind(xys_train, xys_test)
 
-# Extracts only the measurements on the mean (mean()) and standard deviation 
-# (std()) for each measurement. 
+# Extracts only the measurements on the mean (mean()) and standard deviation for each measurement. 
 
 # Get the number of column of mesurement and mean
 mm<-labels[grepl("*mean\\(|*std\\(", labels$V2),]
@@ -31,7 +30,7 @@ id<-traintest$ID
 activity<-traintest$Activity
 tt_mainsd<-cbind(id, activity, tt_mainsd)
 
-# Uses descriptive activity names to name the activities in the data set
+# Uses descriptive activity names to name the activities in the dataset
 # First of all, I create an array of the six activity labels
 activity_labels<-c("WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS", 
           "SITTING", "STANDING", "LAYING")
